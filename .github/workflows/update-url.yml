@@ -23,7 +23,7 @@ jobs:
           NEW_URL: ${{ inputs.new_url }}
         run: |
           sed -i "s|content=\"0; url=[^\"]*\"|content=\"0; url=${NEW_URL}\"|" index.html
-          sed -i "s|window.location.replace(\"[^\"]*\")|window.location.replace(\"${NEW_URL}\")|" index.html
+          sed -i "s|var targetUrl = \"[^\"]*\";|var targetUrl = \"${NEW_URL}\";|" index.html
 
       - name: Commit and push changes
         run: |

@@ -1,10 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Instant Redirect for Browsers -->
-    <meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=lycdBxKbrlY">
-    <script>window.location.replace("https://www.youtube.com/watch?v=lycdBxKbrlY");</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading...</title>
+    <!-- Fallback for no-js -->
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=lycdBxKbrlY">
+    </noscript>
+    <script>
+        (function() {
+            var targetUrl = "https://www.youtube.com/watch?v=lycdBxKbrlY";
+            var videoId = "";
+            try {
+                var urlObj = new URL(targetUrl);
+                if (urlObj.hostname.includes("youtube.com")) {
+                    videoId = urlObj.searchParams.get("v");
+                } else if (urlObj.hostname.includes("youtu.be")) {
+                    videoId = urlObj.pathname.slice(1);
+                }
+            } catch(e) {}
+
+            if (videoId) {
+                var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+                var isAndroid = /android/i.test(userAgent);
+
+                if (isIOS) {
+                    window.location.href = "youtube://watch?v=" + videoId;
+                } else if (isAndroid) {
+                    window.location.href = "intent://www.youtube.com/watch?v=" + videoId + "#Intent;package=com.google.android.youtube;scheme=https;end;";
+                } else {
+                    window.location.replace(targetUrl);
+                    return;
+                }
+
+                // Fallback to web URL if app doesn't open
+                var fallbackTimer = setTimeout(function() {
+                    window.location.replace(targetUrl);
+                }, 1500);
+
+                // Clear the timeout if the page becomes hidden (app opened)
+                document.addEventListener("visibilitychange", function() {
+                    if (document.hidden) {
+                        clearTimeout(fallbackTimer);
+                    }
+                });
+            } else {
+                window.location.replace(targetUrl);
+            }
+        })();
+    </script>
 </head>
 <body style="background:#000;"></body>
 </html>
