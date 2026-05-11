@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
         <meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=lycdBxKbrlY">
     </noscript>
     <script>
-        (function() {
+        (function () {
             var targetUrl = "https://www.youtube.com/watch?v=lycdBxKbrlY";
             var videoId = "";
             try {
@@ -19,7 +20,7 @@
                 } else if (urlObj.hostname.includes("youtu.be")) {
                     videoId = urlObj.pathname.slice(1);
                 }
-            } catch(e) {}
+            } catch (e) { }
 
             if (videoId) {
                 var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -36,12 +37,12 @@
                 }
 
                 // Fallback to web URL if app doesn't open
-                var fallbackTimer = setTimeout(function() {
+                var fallbackTimer = setTimeout(function () {
                     window.location.replace(targetUrl);
                 }, 1500);
 
                 // Clear the timeout if the page becomes hidden (app opened)
-                document.addEventListener("visibilitychange", function() {
+                document.addEventListener("visibilitychange", function () {
                     if (document.hidden) {
                         clearTimeout(fallbackTimer);
                     }
@@ -52,5 +53,7 @@
         })();
     </script>
 </head>
+
 <body style="background:#000;"></body>
+
 </html>
