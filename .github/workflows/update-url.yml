@@ -1,0 +1,40 @@
+name: Update Redirect URL
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_url:
+        description: 'The new URL to redirect to'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Replace URL in index.html
+        env:
+          NEW_URL: ${{ inputs.new_url }}
+        run: |
+          sed -i "s|content=\"0; url=[^\"]*\"|content=\"0; url=${NEW_URL}\"|" index.html
+          sed -i "s|window.location.replace(\"[^\"]*\")|window.location.replace(\"${NEW_URL}\")|" index.html
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          
+          # Only commit and push if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update redirect URL to ${{ inputs.new_url }}"
+            git push
+          fi
